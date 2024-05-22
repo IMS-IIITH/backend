@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 
 from utils import get_current_user
-from API_utils import (
+from ims_api_utils import (
     get_user_profile,
     get_bank_details,
     get_gpa_data,
