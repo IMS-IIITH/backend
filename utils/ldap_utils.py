@@ -20,7 +20,7 @@ def get_user_by_email(email):
         else:
             # User not found
             return None
-    except ldap.LDAPError as e:
+    except ldap.LDAPError:
         # print(f'LDAP Error: {e}')
         return None
 
@@ -43,7 +43,7 @@ def authenticate_user(email, password):
         else:
             # User not found
             return False, None
-    except ldap.LDAPError as e:
+    except ldap.LDAPError:
         # print(f'LDAP Error: {e}')
         return False, None
 
