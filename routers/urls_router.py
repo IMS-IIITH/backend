@@ -3,8 +3,8 @@ from fastapi import APIRouter, HTTPException, Depends
 from models.bank import BankModel
 from models.leave import LeaveApplicationModel
 
-from utils import get_current_user
-from ims_api_utils import (
+from utils.auth_utils import get_current_user
+from utils.ims_api_utils import (
     get_user_profile,
     get_bank_details,
     update_bank_details,

@@ -5,7 +5,7 @@ from typing import Optional
 from pytz import timezone
 from os import getenv
 
-from ldap_utils import get_user_by_email
+from utils.ldap_utils import get_user_by_email
 
 
 # JWT Authentication

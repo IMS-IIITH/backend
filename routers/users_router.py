@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends, Response, Request, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-from ldap_utils import authenticate_user
-from utils import create_access_token, check_current_user, get_current_user
-from ims_api_utils import get_user_roles
+from utils.ldap_utils import authenticate_user
+from utils.auth_utils import create_access_token, check_current_user, get_current_user
+from utils.ims_api_utils import get_user_roles
 
 router = APIRouter()
 
