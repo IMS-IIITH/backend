@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from os import getenv
 import routers.users_router as users_router
+import routers.urls_router as urls_router
 
 DEBUG = getenv("BACKEND_DEBUG", "False").lower() in ("true", "1", "t")
 
@@ -27,3 +28,4 @@ async def index():
 
 # Mount the user router on the "/user" path
 app.include_router(users_router.router, prefix="/user", tags=["User Management"])
+app.include_router(urls_router.router, prefix="/data", tags=["Data Management and Retrieval"])
