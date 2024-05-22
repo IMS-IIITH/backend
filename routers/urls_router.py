@@ -8,6 +8,7 @@ from API_utils import (
     get_courses_data,
     get_attendance_data,
     get_attendance_for_course,
+    get_leave_requests,
 )
 
 router = APIRouter()
@@ -79,3 +80,12 @@ async def get_attendance_for_course_api(
             status_code=404, detail=f"Attendance for course {course_id} not found"
         )
     return attendance_data
+
+@router.get("/leave_requests")
+async def get_leave_requests_api(current_user: dict = Depends(get_current_user)):
+    email = current_user["email"]
+    leave_requests = get_leave_requests(email)
+
+    if leave_requests is None:
+        raise HTTPException(status_code=404, detail="Leave Requests not found")
+    return leave_requests
