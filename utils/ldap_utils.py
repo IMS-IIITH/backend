@@ -2,15 +2,16 @@ import ldap
 from os import getenv
 
 # LDAP server configuration
-LDAP_SERVER = getenv('LDAP_SERVER', 'ldap://localhost:389')
-BASE_DN = getenv('BASE_DN', 'dc=example,dc=com')
+LDAP_SERVER = getenv("LDAP_SERVER", "ldap://localhost:389")
+BASE_DN = getenv("BASE_DN", "dc=example,dc=com")
+
 
 def get_user_by_email(email):
     try:
         conn = ldap.initialize(LDAP_SERVER)
         conn.simple_bind_s()
 
-        search_filter = f'(mail={email})'
+        search_filter = f"(mail={email})"
         results = conn.search_s(BASE_DN, ldap.SCOPE_SUBTREE, search_filter)
 
         if results:
@@ -23,12 +24,13 @@ def get_user_by_email(email):
         # print(f'LDAP Error: {e}')
         return None
 
+
 def authenticate_user(email, password):
     try:
         conn = ldap.initialize(LDAP_SERVER)
         conn.simple_bind_s()
 
-        search_filter = f'(mail={email})'
+        search_filter = f"(mail={email})"
         results = conn.search_s(BASE_DN, ldap.SCOPE_SUBTREE, search_filter)
 
         if results:
@@ -44,9 +46,9 @@ def authenticate_user(email, password):
     except ldap.LDAPError as e:
         # print(f'LDAP Error: {e}')
         return False, None
-    
+
     return False, None
 
 
-if __name__ == '__main__':
-    print(get_user_by_email('bhav.beri@research.iiit.ac.in'))
+if __name__ == "__main__":
+    print(get_user_by_email("bhav.beri@research.iiit.ac.in"))

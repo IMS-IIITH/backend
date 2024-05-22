@@ -40,7 +40,9 @@ async def get_bank_details_api(current_user: dict = Depends(get_current_user)):
 
 
 @router.post("/update_bank_details")
-async def update_bank_details_api(bank_details: BankModel, current_user: dict = Depends(get_current_user)):
+async def update_bank_details_api(
+    bank_details: BankModel, current_user: dict = Depends(get_current_user)
+):
     email = current_user["email"]
     bank_details_dict = bank_details.model_dump()
     return_data = update_bank_details(email, bank_details_dict)
@@ -97,6 +99,7 @@ async def get_attendance_for_course_api(
         )
     return attendance_data
 
+
 @router.get("/leave_requests")
 async def get_leave_requests_api(current_user: dict = Depends(get_current_user)):
     email = current_user["email"]
@@ -106,8 +109,11 @@ async def get_leave_requests_api(current_user: dict = Depends(get_current_user))
         raise HTTPException(status_code=404, detail="Leave Requests not found")
     return leave_requests
 
+
 @router.post("/new_leave_request")
-async def new_leave_request_api(leave_request: LeaveApplicationModel, current_user: dict = Depends(get_current_user)):
+async def new_leave_request_api(
+    leave_request: LeaveApplicationModel, current_user: dict = Depends(get_current_user)
+):
     email = current_user["email"]
     leave_request_dict = leave_request.dict()
     return_data = new_leave_request(email, leave_request_dict)

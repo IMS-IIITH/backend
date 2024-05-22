@@ -1,9 +1,11 @@
 from pydantic import BaseModel, Base64Str
 from typing import Optional
 
+
 class AttachmentModel(BaseModel):
     filename: str
     content: Base64Str
+
 
 class BankModel(BaseModel):
     rollNumber: int
@@ -29,7 +31,7 @@ class BankModel(BaseModel):
                 "remarks": "Lorem ipsum dolor sit amet.",
                 "addAttachment": {
                     "filename": "passbook.pdf",
-                    "content": "base64_encoded_content_here"
-                }
+                    "content": "base64_encoded_content_here",
+                },
             }
         }
