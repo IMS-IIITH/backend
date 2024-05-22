@@ -3,7 +3,7 @@ from os import getenv
 
 # LDAP server configuration
 LDAP_SERVER = getenv('LDAP_SERVER', 'ldap://localhost:389')
-BASE_DN = getenv('LDAP_BASE_DN', 'dc=example,dc=com')
+BASE_DN = getenv('BASE_DN', 'dc=example,dc=com')
 
 def get_user_by_email(email):
     try:
