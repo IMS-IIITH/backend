@@ -1,14 +1,19 @@
 from fastapi import APIRouter, HTTPException, Depends
 
+from models.bank import BankModel
+from models.leave import LeaveApplicationModel
+
 from utils import get_current_user
 from ims_api_utils import (
     get_user_profile,
     get_bank_details,
+    update_bank_details,
     get_gpa_data,
     get_courses_data,
     get_attendance_data,
     get_attendance_for_course,
     get_leave_requests,
+    new_leave_request,
 )
 
 router = APIRouter()
@@ -32,6 +37,17 @@ async def get_bank_details_api(current_user: dict = Depends(get_current_user)):
     if bank_details is None:
         raise HTTPException(status_code=404, detail="Bank Details not found")
     return bank_details
+
+
+@router.post("/update_bank_details")
+async def update_bank_details_api(bank_details: BankModel, current_user: dict = Depends(get_current_user)):
+    email = current_user["email"]
+    bank_details_dict = bank_details.model_dump()
+    return_data = update_bank_details(email, bank_details_dict)
+
+    if return_data is None:
+        raise HTTPException(status_code=404, detail="Bank Details not updated")
+    return return_data
 
 
 @router.get("/transcript")
@@ -89,3 +105,13 @@ async def get_leave_requests_api(current_user: dict = Depends(get_current_user))
     if leave_requests is None:
         raise HTTPException(status_code=404, detail="Leave Requests not found")
     return leave_requests
+
+@router.post("/new_leave_request")
+async def new_leave_request_api(leave_request: LeaveApplicationModel, current_user: dict = Depends(get_current_user)):
+    email = current_user["email"]
+    leave_request_dict = leave_request.dict()
+    return_data = new_leave_request(email, leave_request_dict)
+
+    if return_data is None:
+        raise HTTPException(status_code=404, detail="Leave Request not created")
+    return return_data

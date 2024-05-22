@@ -15,6 +15,8 @@ PROFILE_TYPE = getenv("PROFILE_TYPE", "profile")
 PROFILE_VARIABLE = getenv("PROFILE_VARIABLE", "email")
 BANK_DETAILS_TYPE = getenv("BANK_DETAILS_TYPE", "bank")
 BANK_DETAILS_VARIABLE = getenv("BANK_DETAILS_VARIABLE", "email")
+UPDATE_BANK_DETAILS_TYPE = getenv("UPDATE_BANK_DETAILS_TYPE", "update_bank")
+UPDATE_BANK_DETAILS_VARIABLE = getenv("UPDATE_BANK_DETAILS_VARIABLE", "email")
 
 TRANSCRIPT_TYPE = getenv("TRANSCRIPT_TYPE", "transcript")
 TRANSCRIPT_VARIABLE = getenv("TRANSCRIPT_VARIABLE", "email")
@@ -26,6 +28,8 @@ ATTENDANCE_VARIABLE2 = getenv("ATTENDANCE_VARIABLE2", "course")
 
 LEAVE_REQUESTS_TYPE = getenv("LEAVE_REQUESTS_TYPE", "leave")
 LEAVE_REQUESTS_VARIABLE = getenv("LEAVE_REQUESTS_VARIABLE", "email")
+ADD_LEAVE_REQUEST_TYPE = getenv("ADD_LEAVE_REQUEST_TYPE", "add_leave")
+ADD_LEAVE_REQUEST_VARIABLE = getenv("ADD_LEAVE_REQUEST_VARIABLE", "email")
 
 def _make_url(type, variable, email):
     value = email
@@ -66,6 +70,19 @@ def get_bank_details(email: str):
 
     # Make API Call to get user bank details
     api_return = requests.get(api_url)
+    if api_return.status_code != 200:
+        return None
+    
+    bank_return = api_return.content.decode().strip()
+    bank_json = json.loads(bank_return)
+
+    return bank_json
+
+def update_bank_details(email: str, bank_details: dict):
+    api_url = _make_url(UPDATE_BANK_DETAILS_TYPE, UPDATE_BANK_DETAILS_VARIABLE, email)
+
+    # Make API Call to update user bank details
+    api_return = requests.post(api_url, json=bank_details)
     if api_return.status_code != 200:
         return None
     
@@ -148,3 +165,16 @@ def get_leave_requests(email: str):
     leave_json = json.loads(leave_return)
 
     return leave_json['Applications']
+
+def new_leave_request(email: str, leave_request: dict):
+    api_url = _make_url(ADD_LEAVE_REQUEST_TYPE, ADD_LEAVE_REQUEST_VARIABLE, email)
+
+    # Make API Call to create new leave request
+    api_return = requests.post(api_url, json=leave_request)
+    if api_return.status_code != 200:
+        return None
+    
+    leave_return = api_return.content.decode().strip()
+    leave_json = json.loads(leave_return)
+
+    return leave_json
