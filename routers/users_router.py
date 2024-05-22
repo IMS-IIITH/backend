@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends, Response, Request, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-from utils import create_access_token, check_current_user, get_current_user
 from ldap_utils import authenticate_user
+from utils import create_access_token, check_current_user, get_current_user
+from api_utils import get_user_roles
 
 router = APIRouter()
 
@@ -37,7 +38,7 @@ async def login(
         key="access_token_ims_app", value=new_access_token, httponly=True
     )
 
-    return {"username": username, "email": email}
+    return {"message": "Logged In Successfully"}
 
 
 # User Logout
@@ -52,7 +53,7 @@ async def logout(response: Response, current_user=Depends(check_current_user)):
 # Get Current User Endpoint
 @router.get("/details", status_code=status.HTTP_200_OK)
 async def read_users_me(user_data=Depends(get_current_user)):
-    email = user_data["mail"][0].decode()
-    username = user_data["uid"][0].decode()
+    email = user_data["email"]
 
-    return {"username": username, "email": email}
+    role_data = get_user_roles(email)
+    return {**user_data, **role_data}

@@ -47,7 +47,12 @@ async def get_current_user(access_token_ims_app: str = Cookie(None)):
             raise HTTPException(
                 status_code=401, detail="Invalid authentication credentials"
             )
-        return user
+
+        email = user["mail"][0].decode()
+        username = user["uid"][0].decode()
+        name = user["cn"][0].decode()
+
+        return {"username": username, "email": email, "name": name}
     except JWTError:
         raise HTTPException(
             status_code=401, detail="Invalid authentication credentials"

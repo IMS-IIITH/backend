@@ -46,3 +46,7 @@ def authenticate_user(email, password):
         return False, None
     
     return False, None
+
+
+if __name__ == '__main__':
+    print(get_user_by_email('bhav.beri@research.iiit.ac.in'))

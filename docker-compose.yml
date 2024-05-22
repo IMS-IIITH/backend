@@ -10,4 +10,5 @@ services:
     volumes:
       - .:/app
     env_file:
-      - .env
+      - ./envs/.env
+      
