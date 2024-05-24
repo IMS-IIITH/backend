@@ -1,5 +1,7 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from os import getenv
+
 import routers.users_router as users_router
 import routers.urls_router as urls_router
 
@@ -20,6 +22,14 @@ else:
         docs_url=None,
         redoc_url=None,
     )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+    allow_credentials=True,
+)
 
 
 # Backend Index Page - For checking purposes
