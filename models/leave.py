@@ -58,17 +58,18 @@ class LeaveApplicationModel(BaseModel):
     are_you_presenting_a_paper: Optional[YesNo] = Field(
         None, alias="areYouPresentingAPaper"
     )
-    event_start_date: Optional[str] = Field(alias="eventStartDate")
-    event_end_date: Optional[str] = Field(alias="eventEndDate")
-    event_url: Optional[str] = Field("", alias="eventURL")
+    event_start_date: str = Field(None, alias="eventStartDate")
+    event_end_date: str = Field(None, alias="eventEndDate")
+    event_url: str = Field(None, alias="eventURL")
     missed_exams_for_leave: Optional[YesNo] = Field(alias="missedExamsForLeave")
     semester_courses: List[str] = Field(alias="semesterCourses")
     type_of_exam: Optional[TypeOfExam] = Field(None, alias="typeOfExam")
     exam_category: Optional[ExamCategory] = Field(None, alias="examCategory")
-    remarks: Optional[str] = None
+    remarks: Optional[str] = Field(None, alias="remarks")
     application_date: str = Field(alias="applicationDate")
-    attachment1: Base64Str
-    attachment2: Base64Str
+    attachment1: Base64Str = Field(alias="attachment1")
+    attachment2: Optional[Base64Str] = Field(None, alias="attachment2")
+
 
     class Config:
         json_schema_extra = {
