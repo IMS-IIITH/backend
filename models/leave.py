@@ -44,11 +44,6 @@ class ExamCategory(str, Enum):
     both = "Both"
 
 
-class Attachment(BaseModel):
-    filename: str
-    content: Base64Str
-
-
 class LeaveApplicationModel(BaseModel):
     roll_number: int = Field(alias="rollNumber")
     from_date: str = Field(alias="fromDate")
@@ -63,17 +58,17 @@ class LeaveApplicationModel(BaseModel):
     are_you_presenting_a_paper: Optional[YesNo] = Field(
         None, alias="areYouPresentingAPaper"
     )
-    event_start_date: str = Field(alias="eventStartDate")
-    event_end_date: str = Field(alias="eventEndDate")
-    event_url: str = Field("", alias="eventURL")
+    event_start_date: Optional[str] = Field(alias="eventStartDate")
+    event_end_date: Optional[str] = Field(alias="eventEndDate")
+    event_url: Optional[str] = Field("", alias="eventURL")
     missed_exams_for_leave: Optional[YesNo] = Field(alias="missedExamsForLeave")
     semester_courses: List[str] = Field(alias="semesterCourses")
     type_of_exam: Optional[TypeOfExam] = Field(None, alias="typeOfExam")
     exam_category: Optional[ExamCategory] = Field(None, alias="examCategory")
     remarks: Optional[str] = None
     application_date: str = Field(alias="applicationDate")
-    attachment1: Attachment
-    attachment2: Attachment
+    attachment1: Base64Str
+    attachment2: Base64Str
 
     class Config:
         json_schema_extra = {
@@ -101,14 +96,8 @@ class LeaveApplicationModel(BaseModel):
                 "examCategory": "Theory",
                 "remarks": None,
                 "applicationDate": "2024-03-15",
-                "attachment1": {
-                    "filename": "medical_report.pdf",
-                    "content": "base64_encoded_content_here",
-                },
-                "attachment2": {
-                    "filename": "medical_report.pdf",
-                    "content": "base64_encoded_content_here",
-                },
+                "attachment1": "base64_encoded_content_here",
+                "attachment2": "base64_encoded_content_here",
             }
         }
 
