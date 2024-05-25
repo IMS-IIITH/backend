@@ -126,30 +126,8 @@ def get_courses_data(email: str):
     courses_return = api_return.content.decode().strip()
     courses_json = json.loads(courses_return)
 
-    return courses_json["Courses"]
-
-
-def get_attendance_data(email: str):
-    api_url = _make_url(COURSES_TYPE, COURSES_VARIABLE, email)
-
-    # Make API Call to get attendance data
-    api_return = requests.get(api_url)
-    if api_return.status_code != 200:
-        return None
-
-    courses_return = api_return.content.decode().strip()
-    courses_json = json.loads(courses_return)
-
-    attendances = courses_json["Attendance"]
-    courses = courses_json["Courses"]
-
-    attendance_data = {}
-    for course_id in courses:
-        course = courses[course_id]
-        attendance = attendances[course_id]
-        attendance_data[course_id] = {**course, **attendance}
-
-    return attendance_data
+    joint_courses = {**courses_json["Courses"], **courses_json["Attendance"]}
+    return joint_courses
 
 
 def get_attendance_for_course(email: str, course: str):

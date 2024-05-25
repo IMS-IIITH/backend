@@ -10,7 +10,6 @@ from utils.ims_api_utils import (
     update_bank_details,
     get_gpa_data,
     get_courses_data,
-    get_attendance_data,
     get_attendance_for_course,
     get_leave_requests,
     new_leave_request,
@@ -73,16 +72,6 @@ async def get_courses_api(current_user: dict = Depends(get_current_user)):
     if courses_data is None:
         raise HTTPException(status_code=404, detail="Courses not found")
     return courses_data
-
-
-@router.get("/attendance")
-async def get_attendance_api(current_user: dict = Depends(get_current_user)):
-    email = current_user["email"]
-    attendance_data = get_attendance_data(email)
-
-    if attendance_data is None:
-        raise HTTPException(status_code=404, detail="Attendance not found")
-    return attendance_data
 
 
 @router.get("/attendance/{course_id}")
