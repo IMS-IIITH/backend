@@ -58,9 +58,9 @@ class LeaveApplicationModel(BaseModel):
     are_you_presenting_a_paper: Optional[YesNo] = Field(
         None, alias="areYouPresentingAPaper"
     )
-    event_start_date: str = Field(None, alias="eventStartDate")
-    event_end_date: str = Field(None, alias="eventEndDate")
-    event_url: str = Field(None, alias="eventURL")
+    event_start_date: Optional[str] = Field(None, alias="eventStartDate")
+    event_end_date: Optional[str] = Field(None, alias="eventEndDate")
+    event_url: Optional[str] = Field(None, alias="eventURL")
     missed_exams_for_leave: Optional[YesNo] = Field(alias="missedExamsForLeave")
     semester_courses: List[str] = Field(alias="semesterCourses")
     type_of_exam: Optional[TypeOfExam] = Field(None, alias="typeOfExam")
