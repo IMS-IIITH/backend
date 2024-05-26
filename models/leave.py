@@ -70,7 +70,6 @@ class LeaveApplicationModel(BaseModel):
     attachment1: Base64Str = Field(alias="attachment1")
     attachment2: Optional[Base64Str] = Field(None, alias="attachment2")
 
-
     class Config:
         json_schema_extra = {
             "example": {
