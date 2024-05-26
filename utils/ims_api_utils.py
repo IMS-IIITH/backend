@@ -126,7 +126,15 @@ def get_courses_data(email: str):
     courses_return = api_return.content.decode().strip()
     courses_json = json.loads(courses_return)
 
-    joint_courses = {**courses_json["Courses"], **courses_json["Attendance"]}
+    attendances = courses_json["Attendance"]
+    courses = courses_json["Courses"]
+
+    joint_courses = {}
+    for course_id in courses:
+        course = courses[course_id]
+        attendance = attendances[course_id]
+        joint_courses[course_id] = {**course, **attendance}
+
     return joint_courses
 
 
