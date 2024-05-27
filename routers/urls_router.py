@@ -54,15 +54,11 @@ async def update_bank_details_api(
 @router.get("/transcript")
 async def get_transcript(current_user: dict = Depends(get_current_user)):
     email = current_user["email"]
-
     gpa_data = get_gpa_data(email)
-    courses_data = get_courses_data(email)
 
-    if gpa_data is None or courses_data is None:
+    if gpa_data is None:
         raise HTTPException(status_code=404, detail="Transcript not found")
-
-    return {"gpa": gpa_data, "courses": courses_data}
-
+    return gpa_data
 
 @router.get("/courses")
 async def get_courses_api(current_user: dict = Depends(get_current_user)):
