@@ -1,5 +1,5 @@
 from typing import List, Optional
-from pydantic import BaseModel, Field, Base64Str
+from pydantic import BaseModel, Field
 from enum import Enum
 
 
@@ -67,8 +67,8 @@ class LeaveApplicationModel(BaseModel):
     exam_category: Optional[ExamCategory] = Field(None, alias="examCategory")
     remarks: Optional[str] = Field(None, alias="remarks")
     application_date: str = Field(alias="applicationDate")
-    attachment1: Base64Str = Field(alias="attachment1")
-    attachment2: Optional[Base64Str] = Field(None, alias="attachment2")
+    attachment1: str = Field(alias="attachment1")
+    attachment2: Optional[str] = Field(None, alias="attachment2")
 
     class Config:
         json_schema_extra = {

@@ -1,10 +1,10 @@
-from pydantic import BaseModel, Base64Str
+from pydantic import BaseModel
 from typing import Optional
 
 
 class AttachmentModel(BaseModel):
     filename: str
-    content: Base64Str
+    content: str
 
 
 class BankModel(BaseModel):
