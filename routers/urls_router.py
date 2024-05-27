@@ -60,6 +60,7 @@ async def get_transcript(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=404, detail="Transcript not found")
     return gpa_data
 
+
 @router.get("/courses")
 async def get_courses_api(current_user: dict = Depends(get_current_user)):
     email = current_user["email"]
