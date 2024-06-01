@@ -24,6 +24,6 @@ class BankModel(BaseModel):
                 "ifscCode": "QWERTY51656516",
                 "bankAddress": "123 Main St, Cityville",
                 "remarks": "Lorem ipsum dolor sit amet.",
-                "base64Data": "base64_content_of_selected_file"
+                "base64Data": "base64_content_of_selected_file",
             }
         }
