@@ -2,11 +2,6 @@ from pydantic import BaseModel
 from typing import Optional
 
 
-class AttachmentModel(BaseModel):
-    filename: str
-    content: str
-
-
 class BankModel(BaseModel):
     rollNumber: int
     accountHolderName: str
@@ -16,7 +11,7 @@ class BankModel(BaseModel):
     ifscCode: str
     bankAddress: str
     remarks: Optional[str] = None
-    addAttachment: AttachmentModel
+    base64Data: str
 
     class Config:
         json_schema_extra = {
@@ -29,9 +24,6 @@ class BankModel(BaseModel):
                 "ifscCode": "QWERTY51656516",
                 "bankAddress": "123 Main St, Cityville",
                 "remarks": "Lorem ipsum dolor sit amet.",
-                "addAttachment": {
-                    "filename": "passbook.pdf",
-                    "content": "base64_encoded_content_here",
-                },
+                "base64Data": "base64_content_of_selected_file"
             }
         }
