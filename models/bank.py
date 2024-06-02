@@ -1,9 +1,8 @@
 from pydantic import BaseModel, Field
-from typing import Optional
 
 
 class BankModel(BaseModel):
-    selectBank: str 
+    selectBank: str
     rollNumber: int
     accountHolderName: str
     accountNumber: str
@@ -11,13 +10,13 @@ class BankModel(BaseModel):
     branchName: str = Field(None, alias="branchName")
     ifscCode: str = Field(None, alias="ifscCode")
     bankAddress: str = Field(None, alias="bankAddress")
-    remarks: str  =  Field(None, alias="remarks")
+    remarks: str = Field(None, alias="remarks")
     base64Data: str
 
     class Config:
         json_schema_extra = {
             "example": {
-                "selectBank": "SBI", 
+                "selectBank": "SBI",
                 "rollNumber": 2022101005,
                 "accountHolderName": "John Doe",
                 "accountNumber": "9876543210",
