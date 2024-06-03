@@ -46,7 +46,9 @@ async def login(
 
 # User Logout
 @router.post("/logout", status_code=status.HTTP_202_ACCEPTED)
-async def logout(response: Response, current_user: str | None = Depends(check_current_user)):
+async def logout(
+    response: Response, current_user: str | None = Depends(check_current_user)
+):
     if current_user is None:
         raise HTTPException(status_code=401, detail="Not Logged In!")
     response.delete_cookie("access_token_ims_app")
@@ -61,6 +63,7 @@ async def read_users_me(user_data=Depends(get_current_user)):
     role_data = get_user_roles(email)
     return {**user_data, **role_data}
 
+
 @router.post("/extend_cookie", status_code=status.HTTP_200_OK)
 async def extend_cookie(
     request: Request,
@@ -68,7 +71,9 @@ async def extend_cookie(
     user_data=Depends(get_current_user),
 ):
     # Extend the access token/expiry time
-    new_access_token = create_access_token(data={"username": user_data["username"], "email": user_data["email"]})
+    new_access_token = create_access_token(
+        data={"username": user_data["username"], "email": user_data["email"]}
+    )
     response.set_cookie(
         key="access_token_ims_app", value=new_access_token, httponly=True
     )
