@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 
+
 class BankModel(BaseModel):
     selectBank: str
     rollNumber: int
