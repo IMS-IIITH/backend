@@ -1,16 +1,16 @@
 from pydantic import BaseModel, Field
-
+from typing import Optional
 
 class BankModel(BaseModel):
     selectBank: str
     rollNumber: int
     accountHolderName: str
     accountNumber: str
-    bankName: str = Field(None, alias="bankName")
-    branchName: str = Field(None, alias="branchName")
-    ifscCode: str = Field(None, alias="ifscCode")
-    bankAddress: str = Field(None, alias="bankAddress")
-    remarks: str = Field(None, alias="remarks")
+    bankName: Optional[str] = Field(None, alias="bankName")
+    branchName: Optional[str] = Field(None, alias="branchName")
+    ifscCode: Optional[str] = Field(None, alias="ifscCode")
+    bankAddress: Optional[str] = Field(None, alias="bankAddress")
+    remarks: Optional[str] = Field(None, alias="remarks")
     base64Data: str
 
     class Config:
