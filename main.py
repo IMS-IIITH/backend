@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from os import getenv
 
@@ -6,6 +6,7 @@ import routers.users_router as users_router
 import routers.urls_router as urls_router
 
 DEBUG = getenv("BACKEND_DEBUG", "False").lower() in ("true", "1", "t")
+MIN_VERSION = getenv("MIN_VERSION", None)
 
 # FastAPI instance
 if DEBUG:
@@ -36,6 +37,55 @@ app.add_middleware(
 @app.get("/", tags=["General"])
 async def index():
     return {"message": "Backend Running!!"}
+
+
+@app.get(
+    "/validate_version/{version}", tags=["General"], status_code=status.HTTP_200_OK
+)
+async def validate_version(version: str):
+    print(MIN_VERSION, version)
+    if MIN_VERSION is None:
+        return {"message": "No minimum version set"}
+
+    pre = False
+    if "pre" in version:
+        pre = True
+
+    split_version = version.split(".")
+    if pre:
+        if len(split_version) != 4:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid version format"
+            )
+        split_version = split_version[:3]
+
+    if len(split_version) != 3:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid version format"
+        )
+
+    split_min_version = MIN_VERSION.split(".")
+
+    if int(split_version[0]) < int(split_min_version[0]):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Old Version"
+        )
+    if int(split_version[0]) > int(split_min_version[0]):
+        return {"message": "Valid Version", "pre": pre}
+
+    if int(split_version[1]) < int(split_min_version[1]):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Old Version"
+        )
+    if int(split_version[1]) > int(split_min_version[1]):
+        return {"message": "Valid Version", "pre": pre}
+
+    if int(split_version[2]) < int(split_min_version[2]):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Old Version"
+        )
+    if int(split_version[2]) >= int(split_min_version[2]):
+        return {"message": "Valid Version", "pre": pre}
 
 
 # Mount the user router on the "/user" path
