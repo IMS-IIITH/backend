@@ -46,7 +46,7 @@ def get_user_roles(email: str):
     api_url = _make_url(AUTH_TYPE, AUTH_VARIABLE, email)
 
     # Make API Call to get user roles
-    api_return = requests.get(api_url)
+    api_return = requests.get(api_url, verify=False)
     if api_return.status_code != 200:
         return None
 
@@ -63,7 +63,7 @@ def get_user_profile(email: str):
     api_url = _make_url(PROFILE_TYPE, PROFILE_VARIABLE, email)
 
     # Make API Call to get user profile
-    api_return = requests.get(api_url)
+    api_return = requests.get(api_url, verify=False)
     if api_return.status_code != 200:
         return None
 
@@ -77,7 +77,7 @@ def get_bank_details(email: str):
     api_url = _make_url(BANK_DETAILS_TYPE, BANK_DETAILS_VARIABLE, email)
 
     # Make API Call to get user bank details
-    api_return = requests.get(api_url)
+    api_return = requests.get(api_url, verify=False)
     if api_return.status_code != 200:
         return None
 
@@ -91,7 +91,7 @@ def update_bank_details(email: str, bank_details: dict):
     api_url = _make_url(UPDATE_BANK_DETAILS_TYPE, UPDATE_BANK_DETAILS_VARIABLE, email)
 
     # Make API Call to update user bank details
-    api_return = requests.post(api_url, json=bank_details)
+    api_return = requests.post(api_url, json=bank_details, verify=False)
     if api_return.status_code != 200:
         return None
 
@@ -105,7 +105,7 @@ def get_gpa_data(email: str):
     api_url = _make_url(TRANSCRIPT_TYPE, TRANSCRIPT_VARIABLE, email)
 
     # Make API Call to get gpa data
-    api_return = requests.get(api_url)
+    api_return = requests.get(api_url, verify=False)
     if api_return.status_code != 200:
         return None
 
@@ -119,7 +119,7 @@ def get_courses_data(email: str):
     api_url = _make_url(COURSES_TYPE, COURSES_VARIABLE, email)
 
     # Make API Call to get courses data
-    api_return = requests.get(api_url)
+    api_return = requests.get(api_url, verify=False)
     if api_return.status_code != 200:
         return None
 
@@ -143,7 +143,7 @@ def get_attendance_for_course(email: str, course: str):
     api_url += f"&{ATTENDANCE_VARIABLE2}={course}"
 
     # Make API Call to get attendance data
-    api_return = requests.get(api_url)
+    api_return = requests.get(api_url, verify=False)
     if api_return.status_code != 200:
         return None
 
@@ -157,7 +157,7 @@ def get_leave_requests(email: str):
     api_url = _make_url(LEAVE_REQUESTS_TYPE, LEAVE_REQUESTS_VARIABLE, email)
 
     # Make API Call to get leave requests
-    api_return = requests.get(api_url)
+    api_return = requests.get(api_url, verify=False)
     if api_return.status_code != 200:
         return None
 
@@ -171,7 +171,7 @@ def new_leave_request(email: str, leave_request: dict):
     api_url = _make_url(ADD_LEAVE_REQUEST_TYPE, ADD_LEAVE_REQUEST_VARIABLE, email)
 
     # Make API Call to create new leave request
-    api_return = requests.post(api_url, json=leave_request)
+    api_return = requests.post(api_url, json=leave_request, verify=False)
     if api_return.status_code != 200:
         return None
 
