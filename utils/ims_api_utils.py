@@ -1,6 +1,9 @@
 import json
 import requests
 from os import getenv
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # ENV Variables
 API_ENDPOINT = getenv("API_ENDPOINT", "localhost/api")
