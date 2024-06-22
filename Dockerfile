@@ -19,5 +19,4 @@ ENV VIRTUAL_ENV=/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY --from=dependencies /venv /venv
 COPY . .
-ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
-
+ENTRYPOINT [ "python3", "main.py"]

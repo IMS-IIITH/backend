@@ -92,3 +92,8 @@ app.include_router(users_router.router, prefix="/user", tags=["User Management"]
 app.include_router(
     urls_router.router, prefix="/data", tags=["Data Management and Retrieval"]
 )
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run("__main__:app", host="0.0.0.0", port=80, reload=DEBUG)
