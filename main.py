@@ -43,7 +43,6 @@ async def index():
     "/validate_version/{version}", tags=["General"], status_code=status.HTTP_200_OK
 )
 async def validate_version(version: str):
-    print(MIN_VERSION, version)
     if MIN_VERSION is None:
         return {"message": "No minimum version set"}
 

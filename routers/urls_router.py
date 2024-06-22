@@ -43,7 +43,7 @@ async def update_bank_details_api(
     bank_details: BankModel, current_user: dict = Depends(get_current_user)
 ):
     email = current_user["email"]
-    bank_details_dict = bank_details.model_dump()
+    bank_details_dict = bank_details.dict(by_alias=True)
     return_data = update_bank_details(email, bank_details_dict)
 
     if return_data is None:
@@ -101,7 +101,7 @@ async def new_leave_request_api(
     leave_request: LeaveApplicationModel, current_user: dict = Depends(get_current_user)
 ):
     email = current_user["email"]
-    leave_request_dict = leave_request.dict()
+    leave_request_dict = leave_request.dict(by_alias=True)
     return_data = new_leave_request(email, leave_request_dict)
 
     if return_data is None:

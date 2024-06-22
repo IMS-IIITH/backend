@@ -7,11 +7,11 @@ class BankModel(BaseModel):
     rollNumber: int
     accountHolderName: str
     accountNumber: str
-    bankName: Optional[str] = Field(None, alias="bankName")
-    branchName: Optional[str] = Field(None, alias="branchName")
-    ifscCode: Optional[str] = Field(None, alias="ifscCode")
-    bankAddress: Optional[str] = Field(None, alias="bankAddress")
-    remarks: Optional[str] = Field(None, alias="remarks")
+    bankName: Optional[str] = Field(None)
+    branchName: Optional[str] = Field(None)
+    ifscCode: Optional[str] = Field(None)
+    bankAddress: Optional[str] = Field(None)
+    remarks: Optional[str] = Field(None)
     base64Data: str
 
     class Config:

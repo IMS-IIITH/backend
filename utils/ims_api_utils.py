@@ -32,12 +32,19 @@ ADD_LEAVE_REQUEST_TYPE = getenv("ADD_LEAVE_REQUEST_TYPE", "add_leave")
 ADD_LEAVE_REQUEST_VARIABLE = getenv("ADD_LEAVE_REQUEST_VARIABLE", "email")
 
 
+def get_roll_number(email: str):
+    user = get_user_roles(email)
+    if user is not None:
+        return user["rollNumber"]
+    return None
+
+
 def _make_url(type, variable, email):
     value = email
     if "roll" in variable:
-        rollNumber = get_user_roles(email)
+        rollNumber = get_roll_number(email)
         if rollNumber is not None:
-            value = rollNumber["rollNumber"]
+            value = rollNumber
 
     return f"{API_ENDPOINT}?typ={type}&{variable}={value}&{API_KEY_SECRET}"
 
@@ -169,6 +176,12 @@ def get_leave_requests(email: str):
 
 def new_leave_request(email: str, leave_request: dict):
     api_url = _make_url(ADD_LEAVE_REQUEST_TYPE, ADD_LEAVE_REQUEST_VARIABLE, email)
+
+    rollNumber = get_roll_number(email)
+    if rollNumber is not None:
+        leave_request["rollNumber"] = rollNumber
+    else:
+        raise Exception("Roll Number not found")
 
     # Make API Call to create new leave request
     api_return = requests.post(api_url, json=leave_request, verify=False)
