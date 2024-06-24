@@ -50,13 +50,15 @@ async def validate_version(version: str):
     if "pre" in version:
         pre = True
 
-    split_version = version.split(".")
+    split_version = list(version.split("."))
     if pre:
         if len(split_version) != 4:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid version format"
             )
         split_version = split_version[:3]
+        # Move to last major version
+        split_version[-1] = str(int(split_version[-1]) - 1)
 
     if len(split_version) != 3:
         raise HTTPException(
