@@ -28,6 +28,6 @@ class BankModel(BaseModel):
                 "bankAddress": "123 Main St, Cityville",
                 "remarks": "Lorem ipsum dolor sit amet.",
                 "base64Data": "base64_content_of_selected_file",
-                "recordID": "ABCD123"
+                "recordID": "ABCD123",
             }
         }
