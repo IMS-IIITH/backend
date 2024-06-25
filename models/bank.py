@@ -13,6 +13,7 @@ class BankModel(BaseModel):
     bankAddress: Optional[str] = Field(None)
     remarks: Optional[str] = Field(None)
     base64Data: str
+    recordID: Optional[str] = Field(default=None)
 
     class Config:
         json_schema_extra = {
@@ -27,5 +28,6 @@ class BankModel(BaseModel):
                 "bankAddress": "123 Main St, Cityville",
                 "remarks": "Lorem ipsum dolor sit amet.",
                 "base64Data": "base64_content_of_selected_file",
+                "recordID": "ABCD123"
             }
         }
