@@ -1,6 +1,7 @@
 from typing import List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator, ValidationInfo
 from enum import Enum
+from utils.utils import to_date
 
 
 class ReasonForLeave(str, Enum):
@@ -74,6 +75,19 @@ class LeaveApplicationModel(BaseModel):
     application_date: str = Field(alias="applicationDate")
     attachment1: Attachment = Field(alias="attachment1")
     attachment2: Optional[Attachment] = Field(None, alias="attachment2")
+
+    @field_validator("total_days")
+    def check_total_days(cls, v, info: ValidationInfo):
+        if v < 1:
+            raise ValueError("Total days cannot be less than 1")
+
+        if to_date(info.object.from_date) > to_date(info.object.to_date):
+            raise ValueError("fromDate cannot be after toDate")
+        
+        # Check if totalDays is correct
+        if (to_date(info.object.to_date) - to_date(info.object.from_date)).days + 1 != v:
+            raise ValueError("Total days do not match fromDate and toDate")
+
 
     class Config:
         json_schema_extra = {

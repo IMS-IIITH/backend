@@ -2,6 +2,8 @@ import json
 import requests
 from os import getenv
 import urllib3
+from fastapi import HTTPException, status
+from utils.utils import to_date, today
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -195,3 +197,117 @@ def new_leave_request(email: str, leave_request: dict):
     leave_json = json.loads(leave_return)
 
     return leave_json
+
+def validate_new_leave(email: str, leave_request: dict):
+    # Check if totalDays is less than 20
+    if leave_request["totalDays"] > 20:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail="Leave duration is more than 20 days, please contact academic office for this.",
+        )
+    
+    if leave_request["reasonForLeave"] in ["Sickness", ]:
+        if to_date(leave_request["toDate"]) > today():
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Leave End Date cannot be in the future",
+            )
+        
+        # patient type and doctor category  must be filled
+        if leave_request["patientCategory"] is None or leave_request["doctorCategory"] is None:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Patient Category and Doctor Category are required for this type of leave",
+            )
+    
+    if leave_request["reasonForLeave"] in ["Technical Event", "Sports Event", "Cultural Event"]:
+        # Check if eventStartDate and eventEndDate are present
+        if leave_request["eventStartDate"] is None or leave_request["eventEndDate"] is None:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Event Start Date and Event End Date are required for this type of leave",
+            )
+        if to_date(leave_request["eventStartDate"]) > to_date(leave_request["eventEndDate"]):
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Event Start Date cannot be after Event End Date",
+            )
+        
+        # Check is eventStartDate and eventEndDate are valid and within the fromDate and toDate
+        if to_date(leave_request["eventStartDate"]) < to_date(leave_request["fromDate"]):
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Event Start Date cannot be before Leave Start Date",
+            )
+        if to_date(leave_request["eventEndDate"]) > to_date(leave_request["toDate"]):
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Event End Date cannot be after Leave End Date",
+            )
+        
+    if leave_request["reasonForLeave"] == "Technical Event":
+        # Check if eventURL is present
+        if leave_request["eventURL"] is None:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Event URL is required for this type of leave",
+            )
+        
+        # Check if eventType is present
+        if leave_request["eventType"] is None:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Event Type is required for this type of leave",
+            )
+        
+        # if eventType is conference, then areYouPresentingAPaper must be filled
+        if leave_request["eventType"] == "Conference" and leave_request["areYouPresentingAPaper"] is None:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Are you presenting a paper is required for Conference",
+            )
+        
+    if leave_request["missedExamsForLeave"] == "Yes":
+        # Check if missedExams is present
+        if leave_request["semesterCourses"] is None:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Courses List is required if missed exams is Yes",
+            )
+        
+        # Check if typeOfExam and examCategory is present
+        if leave_request["typeOfExam"] is None or leave_request["examCategory"] is None:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Type of Exam and Exam Category are required if missed exams is Yes",
+            )
+        
+    # Check if it clashes with any of the already existing leave requests
+    leave_requests = get_leave_requests(email)
+    if leave_requests is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Past Leave Requests not found",
+        )
+
+    for leave in leave_requests:
+        leave_data = leave_requests[leave]
+        start_date1 = to_date(leave_request["fromDate"])
+        end_date1 = to_date(leave_request["toDate"])
+        start_date2 = to_date(leave_data["fromdate"])
+        end_date2 = to_date(leave_data["todate"])
+
+        ok = False
+
+        if start_date1 < start_date2 and end_date1 < start_date2:
+            ok = True
+        elif start_date2 < start_date1 and end_date2 < start_date1:
+            ok = True
+
+        if not ok:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Leave Request clashes with existing leave requests",
+            )
+        
+    return True
