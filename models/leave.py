@@ -72,7 +72,7 @@ class LeaveApplicationModel(BaseModel):
     exam_category: Optional[ExamCategory] = Field(None, alias="examCategory")
     remarks: Optional[str] = Field(None, alias="remarks")
     application_date: str = Field(alias="applicationDate")
-    attachment1:  Attachment = Field(alias="attachment1")
+    attachment1: Attachment = Field(alias="attachment1")
     attachment2: Optional[Attachment] = Field(None, alias="attachment2")
 
     class Config:
