@@ -13,6 +13,7 @@ python-ldap
 python-multipart>=0.0.9
 pytz==2024.1
 requests>=2.31.0
+shortuuid==1.0.13
 slowapi==0.1.9
 starlette>=0.36.3,<0.37.0
 uvicorn==0.29.0
