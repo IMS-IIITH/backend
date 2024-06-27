@@ -13,6 +13,7 @@ from utils.ims_api_utils import (
     get_attendance_for_course,
     get_leave_requests,
     new_leave_request,
+    validate_new_leave,
 )
 
 router = APIRouter()
@@ -101,7 +102,10 @@ async def new_leave_request_api(
     leave_request: LeaveApplicationModel, current_user: dict = Depends(get_current_user)
 ):
     email = current_user["email"]
+    
     leave_request_dict = leave_request.dict(by_alias=True)
+    validate_new_leave(email, leave_request_dict)
+
     return_data = new_leave_request(email, leave_request_dict)
 
     if return_data is None:
