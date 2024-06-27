@@ -212,7 +212,7 @@ def validate_new_leave(email: str, leave_request: dict):
         # attach Medical Certificate from doctor custom message.
         if (
             leave_request["filename1"] is None
-            and leave_request["filedata1"] is ''
+            and leave_request["filedata1"] == ''
         ):
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
@@ -240,7 +240,7 @@ def validate_new_leave(email: str, leave_request: dict):
     # Display custom message to upload relevant doc for any other reason
     if (leave_request["reasonForLeave"] in ["Any Other"] and 
         leave_request["filename1"] is None and
-        leave_request["filedata1"] is ''):
+        leave_request["filedata1"] == ''):
         raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
                 detail="Please attach relevant document.",
@@ -301,11 +301,31 @@ def validate_new_leave(email: str, leave_request: dict):
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
                 detail="Please Select Are you presenting a paper",
             )
+        
+        # if file1 is None 
+        if (leave_request["filename1"] is None and
+        leave_request["filedata1"] == ''):
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Please attach Proof from Advisor/Conference.",
+            )
+    
+    # Cultural Event File input is None
+    if (leave_request["reasonForLeave"] == "Cultural Event" or
+        leave_request["reasonForLeave"] == "Sports Event"):
+        
+        # if file1 is None 
+        if (leave_request["filename1"] is None and
+        leave_request["filedata1"] == ''):
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Please attach Event Invitation Letter.",
+            )
 
     # For Family Emergency
     if (leave_request["reasonForLeave"] == "Family Emergency" and
         leave_request["filename1"] is None and
-        leave_request["filedata1"] is ''):
+        leave_request["filedata1"] == ''):
         raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
                 detail="Please attach Parent/Guardian Consent Letter.",
