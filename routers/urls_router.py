@@ -102,7 +102,7 @@ async def new_leave_request_api(
     leave_request: LeaveApplicationModel, current_user: dict = Depends(get_current_user)
 ):
     email = current_user["email"]
-    
+
     leave_request_dict = leave_request.dict(by_alias=True)
     validate_new_leave(email, leave_request_dict)
 

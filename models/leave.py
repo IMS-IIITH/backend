@@ -73,7 +73,6 @@ class LeaveApplicationModel(BaseModel):
     filename2: Optional[str] = Field(None)
     filedata2: Optional[str] = Field(None)
 
-
     @field_validator("total_days")
     def check_total_days(cls, v, info: ValidationInfo):
         if v < 1:
@@ -81,11 +80,12 @@ class LeaveApplicationModel(BaseModel):
 
         if to_date(info.object.from_date) > to_date(info.object.to_date):
             raise ValueError("fromDate cannot be after toDate")
-        
-        # Check if totalDays is correct
-        if (to_date(info.object.to_date) - to_date(info.object.from_date)).days + 1 != v:
-            raise ValueError("Total days do not match fromDate and toDate")
 
+        # Check if totalDays is correct
+        if (
+            to_date(info.object.to_date) - to_date(info.object.from_date)
+        ).days + 1 != v:
+            raise ValueError("Total days do not match fromDate and toDate")
 
     class Config:
         json_schema_extra = {
