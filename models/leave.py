@@ -68,8 +68,8 @@ class LeaveApplicationModel(BaseModel):
     exam_category: Optional[ExamCategory] = Field(None, alias="examCategory")
     remarks: Optional[str] = Field(None, alias="remarks")
     application_date: str = Field(alias="applicationDate")
-    filename1: str
-    filedata1: str
+    filename1: Optional[str] = Field(None)
+    filedata1: Optional[str] = Field(None)
     filename2: Optional[str] = Field(None)
     filedata2: Optional[str] = Field(None)
 
