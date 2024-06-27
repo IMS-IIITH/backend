@@ -302,6 +302,16 @@ def validate_new_leave(email: str, leave_request: dict):
                 detail="Please Select Are you presenting a paper",
             )
 
+    # For Family Emergency
+    if (leave_request["reasonForLeave"] == "Family Emergency" and
+        leave_request["filename1"] is None and
+        leave_request["filedata1"] is ''):
+        raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Please attach Parent/Guardian Consent Letter.",
+            )
+
+
     if leave_request["missedExamsForLeave"] == "Yes":
         # Check if missedExams is present
         if leave_request["semesterCourses"] is None:
