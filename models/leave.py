@@ -45,11 +45,6 @@ class ExamCategory(str, Enum):
     both = "Both"
 
 
-class Attachment(BaseModel):
-    name: str
-    content: str
-
-
 class LeaveApplicationModel(BaseModel):
     roll_number: int = Field(alias="rollNumber")
     from_date: str = Field(alias="fromDate")
@@ -73,8 +68,11 @@ class LeaveApplicationModel(BaseModel):
     exam_category: Optional[ExamCategory] = Field(None, alias="examCategory")
     remarks: Optional[str] = Field(None, alias="remarks")
     application_date: str = Field(alias="applicationDate")
-    attachment1: Attachment = Field(alias="attachment1")
-    attachment2: Optional[Attachment] = Field(None, alias="attachment2")
+    filename1: str
+    filedata1: str
+    filename2: Optional[str] = Field(None)
+    filedata2: Optional[str] = Field(None)
+
 
     @field_validator("total_days")
     def check_total_days(cls, v, info: ValidationInfo):
@@ -115,14 +113,10 @@ class LeaveApplicationModel(BaseModel):
                 "examCategory": "Theory",
                 "remarks": None,
                 "applicationDate": "2024-03-15",
-                "attachment1": {
-                    "name": "file1.pdf",
-                    "content": "base64_encoded_content_here",
-                },
-                "attachment2": {
-                    "name": "file2.png",
-                    "content": "base64_encoded_content_here",
-                },
+                "filename1": "file1.pdf",
+                "filedata1": "Base64 encoded file data",
+                "filename2": "file2.pdf",
+                "filedata2": "Base64 encoded file data",
             }
         }
 
