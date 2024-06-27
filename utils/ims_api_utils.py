@@ -244,7 +244,7 @@ def validate_new_leave(email: str, leave_request: dict):
         ):
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Event Start Date cannot be after Event End Date",
+                detail="Please Check Event End Date must be Greater than Event From Date",
             )
 
         # Check is eventStartDate and eventEndDate are valid and within the fromDate and toDate
@@ -253,12 +253,12 @@ def validate_new_leave(email: str, leave_request: dict):
         ):
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Event Start Date cannot be before Leave Start Date",
+                detail="Event Start Date must be between Leave From Date and Leave To Date.",
             )
         if to_date(leave_request["eventEndDate"]) > to_date(leave_request["toDate"]):
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Event End Date cannot be after Leave End Date",
+                detail="Event End Date must be between Leave From Date and Leave To Date.",
             )
 
     if leave_request["reasonForLeave"] == "Technical Event":
