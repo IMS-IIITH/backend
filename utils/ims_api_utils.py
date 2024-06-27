@@ -277,7 +277,7 @@ def validate_new_leave(email: str, leave_request: dict):
         ):
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Are you presenting a paper is required for Conference",
+                detail="Please Select Are you presenting a paper",
             )
 
     if leave_request["missedExamsForLeave"] == "Yes":
