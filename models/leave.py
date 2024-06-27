@@ -78,12 +78,12 @@ class LeaveApplicationModel(BaseModel):
         if v < 1:
             raise ValueError("Total days cannot be less than 1")
 
-        if to_date(info.data.get('from_date')) > to_date(info.data.get('to_date')):
+        if to_date(info.data.get("from_date")) > to_date(info.data.get("to_date")):
             raise ValueError("fromDate cannot be after toDate")
 
         # Check if totalDays is correct
         if (
-            to_date(info.data.get('to_date')) - to_date(info.data.get('from_date'))
+            to_date(info.data.get("to_date")) - to_date(info.data.get("from_date"))
         ).days + 1 != v:
             raise ValueError("Total days do not match fromDate and toDate")
 
