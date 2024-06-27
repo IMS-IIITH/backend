@@ -313,7 +313,10 @@ def validate_new_leave(email: str, leave_request: dict):
         leave_data = leave_requests[leave]
         start_date1 = to_date(leave_request["fromDate"])
         end_date1 = to_date(leave_request["toDate"])
-        if(leave_data["fromdate"] != "0000-00-00" and leave_data['todate'] != "0000-00-00"):
+        if (
+            leave_data["fromdate"] != "0000-00-00"
+            and leave_data["todate"] != "0000-00-00"
+        ):
             start_date2 = to_date(leave_data["fromdate"])
             end_date2 = to_date(leave_data["todate"])
 
