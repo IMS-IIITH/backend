@@ -209,6 +209,16 @@ def validate_new_leave(email: str, leave_request: dict):
     if leave_request["reasonForLeave"] in [
         "Sickness",
     ]:
+        # attach Medical Certificate from doctor custom message.
+        if (
+            leave_request["filename1"] is None
+            and leave_request["filedata1"] is ''
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Please attach Medical Certificate from Doctor.",
+            )
+        
         if to_date(leave_request["toDate"]) > today():
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
@@ -224,6 +234,8 @@ def validate_new_leave(email: str, leave_request: dict):
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
                 detail="Patient Category and Doctor Category are required for this type of leave",
             )
+        
+       
 
     if leave_request["reasonForLeave"] in [
         "Technical Event",
