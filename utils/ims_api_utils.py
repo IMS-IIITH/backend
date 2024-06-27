@@ -181,7 +181,6 @@ def get_leave_requests(email: str):
 
 def new_leave_request(email: str, leave_request: dict):
     api_url = _make_url(ADD_LEAVE_REQUEST_TYPE, ADD_LEAVE_REQUEST_VARIABLE, email)
-
     rollNumber = get_roll_number(email)
     if rollNumber is not None:
         leave_request["rollNumber"] = rollNumber
@@ -201,7 +200,7 @@ def new_leave_request(email: str, leave_request: dict):
 
 def validate_new_leave(email: str, leave_request: dict):
     # Check if totalDays is less than 20
-    if leave_request["totalDays"] > 20:
+    if leave_request["totalDays"] is not None and leave_request["totalDays"] > 20:
         raise HTTPException(
             status_code=status.HTTP_406_NOT_ACCEPTABLE,
             detail="Leave duration is more than 20 days, please contact academic office for this.",
@@ -314,20 +313,21 @@ def validate_new_leave(email: str, leave_request: dict):
         leave_data = leave_requests[leave]
         start_date1 = to_date(leave_request["fromDate"])
         end_date1 = to_date(leave_request["toDate"])
-        start_date2 = to_date(leave_data["fromdate"])
-        end_date2 = to_date(leave_data["todate"])
+        if(leave_data["fromdate"] != "0000-00-00" and leave_data['todate'] != "0000-00-00"):
+            start_date2 = to_date(leave_data["fromdate"])
+            end_date2 = to_date(leave_data["todate"])
 
-        ok = False
+            ok = False
 
-        if start_date1 < start_date2 and end_date1 < start_date2:
-            ok = True
-        elif start_date2 < start_date1 and end_date2 < start_date1:
-            ok = True
+            if start_date1 < start_date2 and end_date1 < start_date2:
+                ok = True
+            elif start_date2 < start_date1 and end_date2 < start_date1:
+                ok = True
 
-        if not ok:
-            raise HTTPException(
-                status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Leave Request clashes with existing leave requests",
-            )
+            if not ok:
+                raise HTTPException(
+                    status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                    detail="Leave Request clashes with existing leave requests",
+                )
 
     return True
