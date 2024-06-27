@@ -219,12 +219,6 @@ def validate_new_leave(email: str, leave_request: dict):
                 detail="Please attach Medical Certificate from Doctor.",
             )
         
-        if to_date(leave_request["toDate"]) > today():
-            raise HTTPException(
-                status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Leave End Date cannot be in the future",
-            )
-
         # patient type and doctor category  must be filled
         if (
             leave_request["patientCategory"] is None
@@ -232,8 +226,17 @@ def validate_new_leave(email: str, leave_request: dict):
         ):
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Patient Category and Doctor Category are required for this type of leave",
+                detail="Please select Patient Category and Doctor Category.",
             )
+        
+        # Cannot apply for future dates 
+        if to_date(leave_request["toDate"]) > today():
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Future date(s) not allowed for applying sick leave.",
+            )
+
+       
         
        
 
