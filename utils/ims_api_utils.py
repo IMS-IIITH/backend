@@ -262,12 +262,6 @@ def validate_new_leave(email: str, leave_request: dict):
             )
 
     if leave_request["reasonForLeave"] == "Technical Event":
-        # Check if eventURL is present
-        if leave_request["eventURL"] is None:
-            raise HTTPException(
-                status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Event URL is required for this type of leave",
-            )
 
         # Check if eventType is present
         if leave_request["eventType"] is None:
