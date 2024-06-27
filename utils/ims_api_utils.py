@@ -237,7 +237,14 @@ def validate_new_leave(email: str, leave_request: dict):
             )
 
        
-        
+    # Display custom message to upload relevant doc for any other reason
+    if (leave_request["reasonForLeave"] in ["Any Other"] and 
+        leave_request["filename1"] is None and
+        leave_request["filedata1"] is ''):
+        raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Please attach relevant document.",
+            )
        
 
     if leave_request["reasonForLeave"] in [
