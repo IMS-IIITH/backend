@@ -330,7 +330,7 @@ def validate_new_leave(email: str, leave_request: dict):
             if not ok:
                 raise HTTPException(
                     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                    detail="Leave Request clashes with existing leave requests",
+                    detail="You have already applied another leave between " + leave_request["fromDate"] +  " and " +  leave_request["toDate"] + " Please check the dates.",
                 )
 
     return True
