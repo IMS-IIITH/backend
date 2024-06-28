@@ -209,12 +209,16 @@ def validate_new_leave(email: str, leave_request: dict):
     if leave_request["reasonForLeave"] in [
         "Sickness",
     ]:
-        if to_date(leave_request["toDate"]) > today():
+        # attach Medical Certificate from doctor custom message.
+        if (
+            leave_request["filename1"] is None
+            and leave_request["filedata1"] == ''
+        ):
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Leave End Date cannot be in the future",
+                detail="Please attach Medical Certificate from Doctor.",
             )
-
+        
         # patient type and doctor category  must be filled
         if (
             leave_request["patientCategory"] is None
@@ -222,8 +226,26 @@ def validate_new_leave(email: str, leave_request: dict):
         ):
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Patient Category and Doctor Category are required for this type of leave",
+                detail="Please select Patient Category and Doctor Category.",
             )
+        
+        # Cannot apply for future dates 
+        if to_date(leave_request["toDate"]) > today():
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Future date(s) not allowed for applying sick leave.",
+            )
+
+       
+    # Display custom message to upload relevant doc for any other reason
+    if (leave_request["reasonForLeave"] in ["Any Other"] and 
+        leave_request["filename1"] is None and
+        leave_request["filedata1"] == ''):
+        raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Please attach relevant document.",
+            )
+       
 
     if leave_request["reasonForLeave"] in [
         "Technical Event",
@@ -244,7 +266,7 @@ def validate_new_leave(email: str, leave_request: dict):
         ):
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Event Start Date cannot be after Event End Date",
+                detail="Please Check Event End Date must be Greater than Event From Date",
             )
 
         # Check is eventStartDate and eventEndDate are valid and within the fromDate and toDate
@@ -253,21 +275,15 @@ def validate_new_leave(email: str, leave_request: dict):
         ):
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Event Start Date cannot be before Leave Start Date",
+                detail="Event Start Date must be between Leave From Date and Leave To Date.",
             )
         if to_date(leave_request["eventEndDate"]) > to_date(leave_request["toDate"]):
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Event End Date cannot be after Leave End Date",
+                detail="Event End Date must be between Leave From Date and Leave To Date.",
             )
 
     if leave_request["reasonForLeave"] == "Technical Event":
-        # Check if eventURL is present
-        if leave_request["eventURL"] is None:
-            raise HTTPException(
-                status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Event URL is required for this type of leave",
-            )
 
         # Check if eventType is present
         if leave_request["eventType"] is None:
@@ -283,22 +299,59 @@ def validate_new_leave(email: str, leave_request: dict):
         ):
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Are you presenting a paper is required for Conference",
+                detail="Please Select Are you presenting a paper",
+            )
+        
+        # if file1 is None 
+        if (leave_request["filename1"] is None and
+        leave_request["filedata1"] == ''):
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Please attach Proof from Advisor/Conference.",
+            )
+    
+    # Cultural Event File input is None
+    if (leave_request["reasonForLeave"] == "Cultural Event" or
+        leave_request["reasonForLeave"] == "Sports Event"):
+        # if file1 is None
+        if (leave_request["filename1"] is None and
+        leave_request["filedata1"] == ''):
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Please attach Event Invitation Letter.",
             )
 
+    # For Family Emergency
+    if (leave_request["reasonForLeave"] == "Family Emergency" and
+        leave_request["filename1"] is None and
+        leave_request["filedata1"] == ''):
+        raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Please attach Parent/Guardian Consent Letter.",
+            )
+
+
+    # Missed Exams YES condition checks
     if leave_request["missedExamsForLeave"] == "Yes":
-        # Check if missedExams is present
-        if leave_request["semesterCourses"] is None:
+        # Check if semesterCourses is not empty
+        if not leave_request["semesterCourses"]:
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Courses List is required if missed exams is Yes",
+                detail="Please select courses",
             )
 
-        # Check if typeOfExam and examCategory is present
-        if leave_request["typeOfExam"] is None or leave_request["examCategory"] is None:
+        # Check if typeOfExam is present
+        if leave_request["typeOfExam"] is None:
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Type of Exam and Exam Category are required if missed exams is Yes",
+                detail="Please select type of exam.",
+            )
+        
+        # Check if Exam Category is present
+        if leave_request["examCategory"] is None:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Please select Exam Category.",
             )
 
     # Check if it clashes with any of the already existing leave requests
@@ -330,7 +383,7 @@ def validate_new_leave(email: str, leave_request: dict):
             if not ok:
                 raise HTTPException(
                     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                    detail="Leave Request clashes with existing leave requests",
+                    detail="You have already applied another leave between " + leave_request["fromDate"] +  " and " +  leave_request["toDate"] + " Please check the dates.",
                 )
 
     return True
