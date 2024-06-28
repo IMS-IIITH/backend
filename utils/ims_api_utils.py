@@ -313,8 +313,7 @@ def validate_new_leave(email: str, leave_request: dict):
     # Cultural Event File input is None
     if (leave_request["reasonForLeave"] == "Cultural Event" or
         leave_request["reasonForLeave"] == "Sports Event"):
-        
-        # if file1 is None 
+        # if file1 is None
         if (leave_request["filename1"] is None and
         leave_request["filedata1"] == ''):
             raise HTTPException(
@@ -332,19 +331,27 @@ def validate_new_leave(email: str, leave_request: dict):
             )
 
 
+    # Missed Exams YES condition checks
     if leave_request["missedExamsForLeave"] == "Yes":
-        # Check if missedExams is present
-        if leave_request["semesterCourses"] is None:
+        # Check if semesterCourses is not empty
+        if not leave_request["semesterCourses"]:
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Courses List is required if missed exams is Yes",
+                detail="Please select courses",
             )
 
-        # Check if typeOfExam and examCategory is present
-        if leave_request["typeOfExam"] is None or leave_request["examCategory"] is None:
+        # Check if typeOfExam is present
+        if leave_request["typeOfExam"] is None:
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Type of Exam and Exam Category are required if missed exams is Yes",
+                detail="Please select type of exam.",
+            )
+        
+        # Check if Exam Category is present
+        if leave_request["examCategory"] is None:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Please select Exam Category.",
             )
 
     # Check if it clashes with any of the already existing leave requests
