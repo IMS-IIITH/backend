@@ -299,7 +299,7 @@ def validate_new_leave(email: str, leave_request: dict):
             )
 
         # if file1 is None
-        if leave_request["filename1"] is None and leave_request["filedata1"] == "":
+        if leave_request["filename1"] is None or leave_request["filedata1"] == "":
             raise HTTPException(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
                 detail="Please attach Proof from Advisor/Conference.",
