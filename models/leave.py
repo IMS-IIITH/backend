@@ -86,6 +86,7 @@ class LeaveApplicationModel(BaseModel):
             to_date(info.data.get("to_date")) - to_date(info.data.get("from_date"))
         ).days + 1 != v:
             raise ValueError("Total days do not match fromDate and toDate")
+        return v
 
     class Config:
         json_schema_extra = {
