@@ -104,7 +104,6 @@ async def new_leave_request_api(
     email = current_user["email"]
 
     leave_request_dict = leave_request.dict(by_alias=True)
-    print(leave_request_dict)
     validate_new_leave(email, leave_request_dict)
 
     return_data = new_leave_request(email, leave_request_dict)
