@@ -1,10 +1,18 @@
+networks:
+  ims_backend_net:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
 services:
   backend:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - .:/app
+    restart: unless-stopped
     env_file:
       - ./envs/.env
       - ./envs/.env.urls
+    networks:
+      ims_backend_net:
+          ipv4_address: 172.20.0.5
