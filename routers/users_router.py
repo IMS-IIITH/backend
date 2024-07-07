@@ -60,7 +60,13 @@ async def logout(
 async def read_users_me(user_data=Depends(get_current_user)):
     email = user_data["email"]
 
-    role_data = get_user_roles(email)
+    role_data, error = get_user_roles(email)
+    if role_data is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=error,
+        )
+
     return {**user_data, **role_data}
 
 

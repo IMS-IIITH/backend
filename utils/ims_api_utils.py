@@ -60,15 +60,19 @@ def get_user_roles(email: str):
     # Make API Call to get user roles
     api_return = requests.get(api_url, verify=False)
     if api_return.status_code != 200:
-        return None
+        return None, "IMS API Error!"
+    
+    api_return = api_return.json()
+    if not(api_return["success"]):
+        return None, "User Data Not Found in IMS!"
 
-    auth_return = api_return.json()["user"]
+    auth_return = api_return["user"]
 
     return {
         "userType": auth_return["userType"],
         "role": auth_return["category"],
         "rollNumber": auth_return["rollNumber"],
-    }
+    }, None
 
 
 def get_user_profile(email: str):
