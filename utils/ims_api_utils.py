@@ -38,9 +38,9 @@ ADD_LEAVE_REQUEST_VARIABLE = getenv("ADD_LEAVE_REQUEST_VARIABLE", "email")
 
 
 def get_roll_number(email: str):
-    user = get_user_roles(email)
-    if user is not None:
-        return user["rollNumber"]
+    user, _ = get_user_roles(email)   # Tuple Response from get_user_roles function
+    if user is not None and "rollNumber" in user:
+        return user["rollNumber"]  
     return None
 
 
