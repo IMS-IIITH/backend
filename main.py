@@ -75,8 +75,9 @@ async def validate_version(version: str):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Old Version"
         )
-    
+
     return {"message": "Valid Version", "pre": pre}
+
 
 # Mount the user router on the "/user" path
 app.include_router(users_router.router, prefix="/user", tags=["User Management"])
