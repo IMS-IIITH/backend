@@ -68,27 +68,15 @@ async def validate_version(version: str):
 
     split_min_version = MIN_VERSION.split(".")
 
-    if int(split_version[0]) < int(split_min_version[0]):
+    split_version = list(map(int, split_version))
+    split_min_version = list(map(int, split_min_version))
+
+    if split_version < split_min_version:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Old Version"
         )
-    if int(split_version[0]) > int(split_min_version[0]):
-        return {"message": "Valid Version", "pre": pre}
-
-    if int(split_version[1]) < int(split_min_version[1]):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Old Version"
-        )
-    if int(split_version[1]) > int(split_min_version[1]):
-        return {"message": "Valid Version", "pre": pre}
-
-    if int(split_version[2]) < int(split_min_version[2]):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Old Version"
-        )
-    if int(split_version[2]) >= int(split_min_version[2]):
-        return {"message": "Valid Version", "pre": pre}
-
+    
+    return {"message": "Valid Version", "pre": pre}
 
 # Mount the user router on the "/user" path
 app.include_router(users_router.router, prefix="/user", tags=["User Management"])
