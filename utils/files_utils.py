@@ -62,7 +62,6 @@ def get_file_content(url: str) -> str | None:
         file_name = f"{uuid()}{file_extension}"
         file_path = os.path.join(FILES_DIR, file_name)
         os.makedirs(FILES_DIR, exist_ok=True)
-        print(file_path)
 
         with open(file_path, "wb") as file:
             file.write(api_return.content)
