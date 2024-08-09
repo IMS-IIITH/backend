@@ -7,7 +7,6 @@ from utils.auth_utils import get_current_user
 from utils.ims_api_utils import (
     get_user_profile,
     get_bank_details,
-    update_bank_details,
     get_gpa_data,
     get_courses_data,
     get_attendance_for_course,
