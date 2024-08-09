@@ -66,13 +66,16 @@ async def get_bank_details_api(current_user: dict = Depends(get_current_user)):
 async def update_bank_details_api(
     bank_details: BankModel, current_user: dict = Depends(get_current_user)
 ):
-    email = current_user["email"]
-    bank_details_dict = bank_details.dict(by_alias=True)
-    return_data = update_bank_details(email, bank_details_dict)
+    # Disable this endpoint for now
+    raise HTTPException(status_code=404, detail="Bank Details update is disabled")
 
-    if return_data is None:
-        raise HTTPException(status_code=404, detail="Bank Details not updated")
-    return return_data
+    # email = current_user["email"]
+    # bank_details_dict = bank_details.dict(by_alias=True)
+    # return_data = update_bank_details(email, bank_details_dict)
+
+    # if return_data is None:
+    #     raise HTTPException(status_code=404, detail="Bank Details not updated")
+    # return return_data
 
 
 @router.get("/transcript")
