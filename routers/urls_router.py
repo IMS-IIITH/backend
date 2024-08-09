@@ -26,6 +26,17 @@ async def get_profile(current_user: dict = Depends(get_current_user)):
 
     if profile is None:
         raise HTTPException(status_code=404, detail="Profile not found")
+
+    if (
+        "aadhaarNumber" in profile["general"]
+        and len(profile["general"]["aadhaarNumber"]) > 2
+    ):
+        profile["general"]["aadhaarNumber"] = (
+            "X" * 10 + profile["general"]["aadhaarNumber"][-2:]
+        )
+    else:
+        profile["general"]["aadhaarNumber"] = "Not Available"
+
     return profile
 
 
@@ -36,6 +47,18 @@ async def get_bank_details_api(current_user: dict = Depends(get_current_user)):
 
     if bank_details is None:
         raise HTTPException(status_code=404, detail="Bank Details not found")
+
+    if (
+        "accountNumber" in bank_details["bankDetails"]
+        and len(bank_details["bankDetails"]["accountNumber"]) > 4
+    ):
+        bank_details["bankDetails"]["accountNumber"] = (
+            "X" * (len(bank_details["bankDetails"]["accountNumber"]) - 4)
+            + bank_details["bankDetails"]["accountNumber"][-4:]
+        )
+    else:
+        bank_details["bankDetails"]["accountNumber"] = "Not Available"
+
     return bank_details
 
 
